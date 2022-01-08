@@ -68,6 +68,10 @@ public class Docente {
         return docentes;
     }
 
+    public Turma getTurmaAtendida() {
+        return turmaAtendida;
+    }
+
     public void setTurmaAtendida(Turma turmaAtendida) {
         this.turmaAtendida = turmaAtendida;
     }

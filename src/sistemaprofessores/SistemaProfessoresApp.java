@@ -15,7 +15,6 @@ public class SistemaProfessoresApp {
         Docente docente;
         Turma turma;
 
-
         do {
             System.out.println("-----------------------------------------");
             System.out.println("[ 1 ] - Cadastrar turma");
@@ -48,8 +47,9 @@ public class SistemaProfessoresApp {
                             if (docente != null) {
                                 turma = Turma.getTurma();
                                 if (turma != null) {
+                                    turma.alocarDocente(docente);
                                     docente.setTurmaAtendida(turma);
-                                    System.out.printf("Docente %s definido para turma %s\n", docente.getNome(), turma.getNome());
+//                                    System.out.printf("Docente %s definido para turma %s\n", docente.getNome(), turma.getNome());
                                 }
                             }
                         }
@@ -78,7 +78,11 @@ public class SistemaProfessoresApp {
                         } else {
                             docente = Docente.getDocente();
                             if (docente != null) {
-                                System.out.println(docente.toStringCompleto());
+                                if (docente.getTurmaAtendida() != null) {
+                                    System.out.println(docente.toStringCompleto());
+                                } else {
+                                    System.out.println(docente);
+                                }
                             }
                         }
                         break;
