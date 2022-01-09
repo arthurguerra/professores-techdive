@@ -58,8 +58,10 @@ public class Turma {
                     mes = Integer.parseInt(sc.nextLine());
                 } while (mes < 0 || mes > 12);
 
-                System.out.print("Ano: ");
-                ano = Integer.parseInt(sc.nextLine());
+                do {
+                    System.out.print("Ano: ");
+                    ano = Integer.parseInt(sc.nextLine());
+                } while (ano < 2000);
 
                 dataInicio = LocalDate.of(ano, mes, dia);
 
@@ -67,21 +69,14 @@ public class Turma {
 
             this.dtInicioAula = dataInicio;
 
-            Turma.qtTurmas++;
-
-            this.id = qtTurmas;
-
             for (int i = 0; i < SEMANAS; i++) {
-                Semana semana = new Semana(ChronoUnit.WEEKS.addTo(dataInicio, i + 1));
+                Semana semana = new Semana(ChronoUnit.WEEKS.addTo(dataInicio, i), i+1, this);
                 semanas.add(semana);
             }
 
-//            List<String> listaAssuntos = this.getAssuntos();
-//            int contador = qtAssuntos;
-//
-//            for (int i = 0; i < SEMANAS; i++) {
-//
-//            }
+            Turma.qtTurmas++;
+
+            this.id = qtTurmas;
 
             Turma.turmas.add(this);
 
@@ -110,15 +105,30 @@ public class Turma {
             } while (indexAssunto < 0 || indexAssunto > assuntos.size());
 
             if (indexAssunto != 0) {
-                System.out.print("Escolha uma semana (1 - 52): ");
                 do {
+                    System.out.print("Escolha uma semana (1 - 52): ");
                     indexSemana = Integer.parseInt(sc.nextLine());
-                } while (indexSemana < 0 || indexSemana > SEMANAS);
+                } while (indexSemana <= 0 || indexSemana > SEMANAS);
 
-                this.semanas.get(indexSemana - 1).setAssunto(this.assuntos.get(indexAssunto - 1));
-                this.semanas.get(indexSemana - 1).setDocente(docente);
-                System.out.println("Semana cadastrada com sucesso! ");
-                System.out.printf("Semana: %d %nAssunto: %s %nDocente: %s %n", indexSemana, this.assuntos.get(indexAssunto - 1), docente.getNome());
+                Semana semana = this.semanas.get(indexSemana - 1);
+
+                if (semana.getDocente() == null) {
+                    semana.setAssunto(this.assuntos.get(indexAssunto - 1));
+                    semana.setDocente(docente);
+                    docente.getSemanas().add(semana);
+                    System.out.println("Semana cadastrada com sucesso! ");
+                } else if (semana.getDocenteAuxiliar() == null && semana.getDocente() != docente) {
+                    semana.setAssunto(this.assuntos.get(indexAssunto - 1));
+                    semana.setDocenteAuxiliar(docente);
+                    docente.getSemanas().add(semana);
+                    System.out.println("Segundo professor adicionado com sucesso!");
+                } else if (semana.getDocente() != null && semana.getDocenteAuxiliar() != null){
+                    System.err.println("Limite máximo de dois professores por semana atingido!");
+                } else {
+                    System.out.println("Este professor já está alocado para esta semana!");
+                }
+//                System.out.printf("Semana: %d %nAssunto: %s %nDocente: %s %nInício da semana: %s%n",
+//                        indexSemana, this.assuntos.get(indexAssunto - 1), docente.getNome(), this.semanas.get(indexSemana - 1).getInicio());
             }
         } catch (Exception e) {
             System.err.println("Erro ao alocar docente!");
@@ -175,5 +185,18 @@ public class Turma {
                 "\nQuantidade de Alunos: " + qtAlunos +
                 "\nAssuntos: " + assuntos +
                 "\nInício das aulas: " + dtInicioAula + "\n";
+    }
+
+    public void toStringCompleto() {
+        System.out.println("\nTurma: "+id);
+        System.out.println("Nome: "+nome);
+        System.out.println("Quantidade de Alunos: "+qtAlunos);
+        System.out.println("Assuntos: "+assuntos);
+        System.out.println("Início das aulas: "+dtInicioAula);
+        for(Semana semana: semanas) {
+            if (semana.getDocente() != null) {
+                semana.toStringCompleto();
+            }
+        }
     }
 }

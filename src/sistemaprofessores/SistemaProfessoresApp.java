@@ -49,7 +49,6 @@ public class SistemaProfessoresApp {
                                 if (turma != null) {
                                     turma.alocarDocente(docente);
                                     docente.setTurmaAtendida(turma);
-//                                    System.out.printf("Docente %s definido para turma %s\n", docente.getNome(), turma.getNome());
                                 }
                             }
                         }
@@ -59,7 +58,7 @@ public class SistemaProfessoresApp {
                             System.err.println("Ainda não há turmas cadastradas!");
                         } else {
                             for (Turma t: Turma.getTurmas()) {
-                                System.out.println(t);
+                                t.toStringCompleto();
                             }
                         }
                         break;
@@ -79,7 +78,7 @@ public class SistemaProfessoresApp {
                             docente = Docente.getDocente();
                             if (docente != null) {
                                 if (docente.getTurmaAtendida() != null) {
-                                    System.out.println(docente.toStringCompleto());
+                                    docente.toStringCompleto();
                                 } else {
                                     System.out.println(docente);
                                 }

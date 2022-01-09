@@ -9,7 +9,8 @@ public class Docente {
 
     private int id;
     private String nome;
-    private Turma turmaAtendida;
+    private List<Turma> turmaAtendida = new ArrayList<>();
+    private List<Semana> semanas = new ArrayList<>();
     private static int totalDocentes = 0;
     private static List<Docente> docentes = new ArrayList<>();
 
@@ -51,11 +52,9 @@ public class Docente {
             } catch (Exception e) {
                 System.err.println("Erro ao selecionar docente!");
             }
-        } while(indexDocente < 0 || indexDocente > Docente.getDocentes().size());
+        } while(indexDocente <= 0 || indexDocente > Docente.getDocentes().size());
 
-        if (indexDocente != 0) {
-            docente = Docente.getDocentes().get(indexDocente - 1);
-        }
+        docente = Docente.getDocentes().get(indexDocente - 1);
 
         return docente;
     }
@@ -68,12 +67,18 @@ public class Docente {
         return docentes;
     }
 
-    public Turma getTurmaAtendida() {
+    public List<Turma> getTurmaAtendida() {
         return turmaAtendida;
     }
 
     public void setTurmaAtendida(Turma turmaAtendida) {
-        this.turmaAtendida = turmaAtendida;
+        if (!this.turmaAtendida.contains(turmaAtendida)) {
+            this.turmaAtendida.add(turmaAtendida);
+        }
+    }
+
+    public List<Semana> getSemanas() {
+        return semanas;
     }
 
     @Override
@@ -84,10 +89,16 @@ public class Docente {
 //                "\n - Turma "+ turmaAtendida.getId() + " - " + turmaAtendida.getNome();
     }
 
-    public String toStringCompleto() {
-        return "Docente " + id +
-                "\nNome: " + nome
-                + "\n Turma atendida atualmente: " +
-                "\n - Turma "+ turmaAtendida.getId() + " - " + turmaAtendida.getNome() + "\n";
+    public void toStringCompleto() {
+        System.out.println("Docente: "+id);
+        System.out.println("Nome: "+nome);
+        System.out.println("Turmas atendidas atualmente: ");
+        for(Turma turma: getTurmaAtendida()) {
+            System.out.println(" - Turma "+turma.getId() + ": " + turma.getNome());
+        }
+        System.out.println("Semanas de aula do docente: ");
+        for(Semana semana: semanas) {
+            semana.toStringCompleto();
+        }
     }
 }
